@@ -11,6 +11,8 @@ def home():
 
 @app.route("/rank")
 def rank():
+    with open('debug.html', 'w', encoding='utf-8') as f:
+        f.write(response.text)
     try:
         url = "https://tracker.gg/valorant/profile/riot/siiyoga%23RU1/overview"
         headers = {"User-Agent": "Mozilla/5.0"}

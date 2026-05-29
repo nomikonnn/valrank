@@ -10,14 +10,22 @@ def home():
 @app.route("/rank")
 def rank():
     try:
-        url = "https://api.henrikdev.xyz/valorant/v1/mmr/eu/siiyoga/RU1"
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
 
-        response = requests.get(url)
+        response = requests.get(
+            "https://api.henrikdev.xyz/valorant/v1/mmr/eu/siiyoga/RU1",
+            headers=headers,
+            timeout=10
+        )
 
-        if response.status_code != 200:
-            return f"API Error: {response.status_code}"
+        print(response.text)
 
         data = response.json()
+
+        if "data" not in data:
+            return f"API Response: {data}"
 
         rank = data["data"]["currenttierpatched"]
         rr = data["data"]["ranking_in_tier"]

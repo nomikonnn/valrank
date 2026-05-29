@@ -9,11 +9,20 @@ def home():
 
 @app.route("/rank")
 def rank():
-    url = "https://api.henrikdev.xyz/valorant/v1/mmr/eu/siiyoga/RU1"
+    try:
+        url = "https://api.henrikdev.xyz/valorant/v1/mmr/eu/siiyoga/RU1"
 
-    r = requests.get(url).json()
+        response = requests.get(url)
 
-    rank = r["data"]["currenttierpatched"]
-    rr = r["data"]["ranking_in_tier"]
+        if response.status_code != 200:
+            return f"API Error: {response.status_code}"
 
-    return f"{rank} ({rr} RR)"
+        data = response.json()
+
+        rank = data["data"]["currenttierpatched"]
+        rr = data["data"]["ranking_in_tier"]
+
+        return f"{rank} ({rr} RR)"
+
+    except Exception as e:
+        return f"Error: {str(e)}"

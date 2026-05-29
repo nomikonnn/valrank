@@ -1,5 +1,6 @@
 from flask import Flask
 import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -10,27 +11,37 @@ def home():
 @app.route("/rank")
 def rank():
     try:
+        url = "https://tracker.gg/valorant/profile/riot/siiyoga%23RU1/overview"
+
         headers = {
             "User-Agent": "Mozilla/5.0"
         }
 
-        response = requests.get(
-            "https://api.henrikdev.xyz/valorant/v1/mmr/eu/siiyoga/RU1",
-            headers=headers,
-            timeout=10
-        )
+        response = requests.get(url, headers=headers)
 
-        print(response.text)
+        html = response.text
 
-        data = response.json()
+        # Ищем ранг в странице
+        if "Ascendant" in html:
+            return "Ascendant"
+        elif "Diamond" in html:
+            return "Diamond"
+        elif "Platinum" in html:
+            return "Platinum"
+        elif "Gold" in html:
+            return "Gold"
+        elif "Silver" in html:
+            return "Silver"
+        elif "Bronze" in html:
+            return "Bronze"
+        elif "Iron" in html:
+            return "Iron"
+        elif "Radiant" in html:
+            return "Radiant"
+        elif "Immortal" in html:
+            return "Immortal"
 
-        if "data" not in data:
-            return f"API Response: {data}"
-
-        rank = data["data"]["currenttierpatched"]
-        rr = data["data"]["ranking_in_tier"]
-
-        return f"{rank} ({rr} RR)"
+        return "Rank not found"
 
     except Exception as e:
-        return f"Error: {str(e)}"
+        return str(e)
